@@ -8,17 +8,19 @@
 import AVFoundation
 import SwiftUI
 
-public enum SUIPlayer {
-    typealias StringId = String
-}
+public typealias StringId = String
+public enum SUIPlayer {}
 
 
 extension SUIPlayer {
-   
+    enum PlayerFetching{
+        case newPlayer
+        case cachedPlayer
+    }
     static private var players: [StringId: AVPlayer] = [:]
     
     /// we require an id as a video with the same url may be played in multiple parts of the view composition
-    static func player(_ url: URL, id:String, muted: Bool = false, autoplay: Bool = false) -> AVPlayer {
+    static func player(_ url: URL, id:String, muted: Bool = false, autoplay: Bool = false) -> (player:AVPlayer,fetched:PlayerFetching) {
        
         var players = self.players
         
@@ -29,7 +31,7 @@ extension SUIPlayer {
            asset.url == url
         {
             //LogService.debug(.player, "player \(id) returned cached")
-            return player
+            return (player:player, fetched:.cachedPlayer)
         }
         
         //LogService.debug(.player, "player \(id) being created")
@@ -49,7 +51,7 @@ extension SUIPlayer {
         self.players = players
         preparePlayer(player)
         
-        return player
+        return (player: player, fetched: .newPlayer)
     }
     
     static func loop(player: AVPlayer) {
@@ -78,26 +80,3 @@ public extension SUIPlayer{
     }
 }
 
-
-public extension SUIPlayer {
-    struct AVPlayerControls {
-        public lazy var playerLayer = AVPlayerLayer()
-        @Binding public var isReady: Bool
-        @Binding public var isPlaying: Bool
-        @Binding public var isMuted: Bool
-        @Binding public var volume: Float
-        @Binding public var videoPos: Double
-        @Binding public var videoDuration: Double
-        @Binding public var seeking: Bool
-
-        public init(isReady: Binding<Bool> = .constant(false), isPlaying: Binding<Bool> = .constant(false), isMuted: Binding<Bool> = .constant(false), volume: Binding<Float> = .constant(0), videoPos: Binding<Double>, videoDuration: Binding<Double>, seeking: Binding<Bool>) {
-            _isReady = isReady
-            _volume = volume
-            _isPlaying = isPlaying
-            _isMuted = isMuted
-            _videoPos = videoPos
-            _videoDuration = videoDuration
-            _seeking = seeking
-        }
-    }
-}

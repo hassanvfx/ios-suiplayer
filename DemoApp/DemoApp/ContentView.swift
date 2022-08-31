@@ -23,38 +23,36 @@ struct ContentView: View {
     ///   - make private the `avplayer` and instead expose control through the `control` struct
     ///    - use the control struct to dispose the player and then internally trigger a new inner session
     ///    - when a new player is created with also set a new inner session to triiger UI player layer linking
-    @State var status = UUID().uuidString
-  
+   
     @State var isReady:Bool = false
     @State var isPlaying = false
     @State var isMuted = false
     @State var videoPos = 0.0
     @State var videoDuration = 0.0
     @State var seeking = false
+    @State var playbackId = ""
     
     var body: some View {
         VStack{
-            SUIPlayer.AVPlayerView(player: videoPlayer, controls: controls )
-                .id(videoPlayer.currentItem)
+            
+            SUIPlayer.View(controls: controls)
+                .id(playbackId)
                 .onAppear {
-                    videoPlayer.play()
+                    controls.play()
                 }
                 .onDisappear {
-                    videoPlayer.pause()
+                    controls.pause()
                 }
                 .overlay(
                     VStack{
                        
-                        Button(action: { videoPlayer.pause() }){
+                        Button(action: controls.pause){
                             Text("Pause")
                         }
                         .buttonStyle(BorderedButtonStyle())
                         
                         
-                        Button(action: {
-                            videoPlayer.play()
-                            status = UUID().uuidString
-                        }){
+                        Button(action: controls.play ){
                             Text("Play")
                         }
                         .buttonStyle(BorderedButtonStyle())
@@ -71,7 +69,7 @@ struct ContentView: View {
                         Text("seeking \(seeking ? "1" : "0")")
                         Text("videoPos \(videoPos)")
                         Text("videoDuration \(videoDuration)")
-                        Text(status.suffix(4))
+                       
                     }
                    
                 )
@@ -80,13 +78,16 @@ struct ContentView: View {
 }
 
 extension ContentView{
-    var controls: SUIPlayer.AVPlayerControls {
-        SUIPlayer.AVPlayerControls(
+    var controls: SUIPlayer.Controls {
+        SUIPlayer.Controls(
+            id: playerId,
+            url: videoURL,
             isReady: $isReady,
             isPlaying: $isPlaying,
             videoPos: $videoPos,
             videoDuration: $videoDuration,
-            seeking: $seeking
+            seeking: $seeking,
+            playbackId: $playbackId
         )
     }
     
@@ -100,9 +101,6 @@ extension ContentView{
     
     var videoURL:URL{
         Bundle.main.url(forResource: playerId, withExtension: "mp4")!
-    }
-    var videoPlayer:AVPlayer{
-        SUIPlayer.fetch(videoURL, id: playerId, muted: true, autoplay: true)
     }
     
     

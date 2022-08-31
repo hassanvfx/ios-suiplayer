@@ -14,8 +14,8 @@ import SwiftUI
 public extension SUIPlayer {
     struct AVPlayerView: UIViewRepresentable {
         let player: AVPlayer
-        var controls: AVPlayerControls?
-        public init(player: AVPlayer, controls: AVPlayerControls? = nil) {
+        var controls: Controls
+        public init(player: AVPlayer, controls: Controls) {
             self.player = player
             self.controls = controls
         }
@@ -44,7 +44,7 @@ public extension SUIPlayer.AVPlayerView {
 
 public extension SUIPlayer {
     // This is the SwiftUI view that contains the controls for the player
-    struct AVPlayerControlsView: View {
+    struct ControlsView: View {
         @Binding private(set) var videoPos: Double
         @Binding private(set) var videoDuration: Double
         @Binding private(set) var seeking: Bool
@@ -59,7 +59,7 @@ public extension SUIPlayer {
     }
 }
 
-public extension SUIPlayer.AVPlayerControlsView {
+public extension SUIPlayer.ControlsView {
     var body: some View {
         Row {
             // Play/pause button
@@ -129,25 +129,28 @@ public extension SUIPlayer {
     // This is the SwiftUI view which contains the player and its controls
     struct AVPlayerContainerView: View {
         // The progress through the video, as a percentage (from 0 to 1)
+        var playerId:String
+        var url: URL
         @State private var videoPos: Double = 0
         // The duration of the video in seconds
         @State private var videoDuration: Double = 0
         // Whether we’re currently interacting with the seek bar or doing a seek
         @State private var seeking = false
         private let player: AVPlayer
-        init(url: URL) {
+        init(playerId:StringId, url: URL) {
             player = AVPlayer(url: url)
+            self.url = url
+            self.playerId = playerId
         }
 
-        init(avPlayer: AVPlayer) {
-            player = avPlayer
-        }
     }
 }
 
 public extension SUIPlayer.AVPlayerContainerView {
-    var controls: SUIPlayer.AVPlayerControls {
-        SUIPlayer.AVPlayerControls(
+    var controls: SUIPlayer.Controls {
+        SUIPlayer.Controls(
+            id:playerId,
+            url: url,
             videoPos: $videoPos,
             videoDuration: $videoDuration,
             seeking: $seeking
@@ -157,7 +160,7 @@ public extension SUIPlayer.AVPlayerContainerView {
     var body: some View {
         VStack {
             SUIPlayer.AVPlayerView(player: player, controls: controls)
-            SUIPlayer.AVPlayerControlsView(videoPos: $videoPos,
+            SUIPlayer.ControlsView(videoPos: $videoPos,
                                                  videoDuration: $videoDuration,
                                                  seeking: $seeking,
                                                  player: player)
@@ -172,19 +175,25 @@ public extension SUIPlayer.AVPlayerContainerView {
 public extension SUIPlayer {
     // This is the SwiftUI view which contains the player and its controls
     struct AVPlayerCoverView: View {
+        var playerId: StringId
+        var url: URL
         @State private var videoPos: Double = 0
         @State private var videoDuration: Double = 0
         @State private var seeking = false
         private let player: AVPlayer
-        init(player: AVPlayer) {
-            self.player = player
+        init(playerId:String, url: URL) {
+            player = AVPlayer(url: url)
+            self.url = url
+            self.playerId = playerId
         }
     }
 }
 
 public extension SUIPlayer.AVPlayerCoverView {
-    var controls: SUIPlayer.AVPlayerControls {
-        var controls = SUIPlayer.AVPlayerControls(
+    var controls: SUIPlayer.Controls {
+        var controls = SUIPlayer.Controls(
+            id:playerId,
+            url: url,
             videoPos: $videoPos,
             videoDuration: $videoDuration,
             seeking: $seeking
@@ -220,14 +229,14 @@ public extension SUIPlayer {
     // This is the UIView that contains the AVPlayerLayer for rendering the video
     class AVPlayerUIView: UIView {
         private let player: AVPlayer
-        var controls: AVPlayerControls
+        var controls: Controls
 
         private var durationObservation: NSKeyValueObservation?
         private var timeObservation: Any?
 
-        init(player: AVPlayer, controls: AVPlayerControls? = nil) {
+        init(player: AVPlayer, controls: Controls) {
             self.player = player
-            self.controls = controls ?? AVPlayerControls(videoPos: .constant(1), videoDuration: .constant(1), seeking: .constant(false))
+            self.controls = controls
             super.init(frame: .zero)
             backgroundColor = .clear
 
