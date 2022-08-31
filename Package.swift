@@ -4,24 +4,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "AVPlayerSwiftUI",
+    name: "SUIPlayer",
     platforms: [
         .iOS(.v13),
     ],
     products: [
         .library(
-            name: "AVPlayerSwiftUI",
-            targets: ["AVPlayerSwiftUI"]),
+            name: "SUIPlayer",
+            targets: ["SUIPlayer"]),
     ],
     dependencies: [
         .package(name: "Lux", url: "https://github.com/spree3d/lux-1", .exact("1.2.7")),
     ],
     targets: [
         .target(
-            name: "AVPlayerSwiftUI",
+            name: "SUIPlayer",
             dependencies: ["Lux"]),
         .testTarget(
             name: "FrameworkTests",
-            dependencies: ["AVPlayerSwiftUI"]),
+            dependencies: ["SUIPlayer"]),
     ]
 )

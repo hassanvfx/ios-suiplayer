@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AVPlayerSwiftUI
+import SUIPlayer
 
 @main
 struct DemoAppApp: App {

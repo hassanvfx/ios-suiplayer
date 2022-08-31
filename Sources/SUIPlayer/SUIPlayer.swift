@@ -8,12 +8,12 @@
 import AVFoundation
 import SwiftUI
 
-public enum AVPlayerSwiftUI {
+public enum SUIPlayer {
     typealias StringId = String
 }
 
 
-extension AVPlayerSwiftUI {
+extension SUIPlayer {
    
     static private var players: [StringId: AVPlayer] = [:]
     
@@ -63,12 +63,13 @@ extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI{
+public extension SUIPlayer{
     
     static func dispose(playerId:String){
         var players = self.players
         if let player = players[playerId]{
             //LogService.debug(.player, "player \(playerId) being disposed")
+            player.pause()
             player.replaceCurrentItem(with: nil)
         }
         players.removeValue(forKey: playerId)
@@ -78,7 +79,7 @@ public extension AVPlayerSwiftUI{
 }
 
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     struct AVPlayerControls {
         public lazy var playerLayer = AVPlayerLayer()
         @Binding public var isReady: Bool

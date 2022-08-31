@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C0F67AC28BFF240001ADEE4 /* AVPlayerSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5C0F67AB28BFF240001ADEE4 /* AVPlayerSwiftUI */; };
+		5C0F67AE28BFFFF5001ADEE4 /* SUIPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 5C0F67AD28BFFFF5001ADEE4 /* SUIPlayer */; };
+		5C0F67B028C0015C001ADEE4 /* homeVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 5C0F67AF28C00127001ADEE4 /* homeVideo.mp4 */; };
 		5CFCCF9D28BEE2B8001CD397 /* DemoAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFCCF9C28BEE2B8001CD397 /* DemoAppApp.swift */; };
 		5CFCCF9F28BEE2B8001CD397 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFCCF9E28BEE2B8001CD397 /* ContentView.swift */; };
 		5CFCCFA128BEE2B9001CD397 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CFCCFA028BEE2B9001CD397 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5C0F67AF28C00127001ADEE4 /* homeVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = homeVideo.mp4; sourceTree = "<group>"; };
 		5CB21B4228BEE33A00B39783 /* ios-framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "ios-framework"; path = ..; sourceTree = "<group>"; };
 		5CFCCF9928BEE2B8001CD397 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CFCCF9C28BEE2B8001CD397 /* DemoAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAppApp.swift; sourceTree = "<group>"; };
@@ -53,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C0F67AC28BFF240001ADEE4 /* AVPlayerSwiftUI in Frameworks */,
+				5C0F67AE28BFFFF5001ADEE4 /* SUIPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +110,7 @@
 			children = (
 				5CFCCF9C28BEE2B8001CD397 /* DemoAppApp.swift */,
 				5CFCCF9E28BEE2B8001CD397 /* ContentView.swift */,
+				5C0F67AF28C00127001ADEE4 /* homeVideo.mp4 */,
 				5CFCCFA028BEE2B9001CD397 /* Assets.xcassets */,
 				5CFCCFA228BEE2B9001CD397 /* Preview Content */,
 			);
@@ -156,7 +159,7 @@
 			);
 			name = DemoApp;
 			packageProductDependencies = (
-				5C0F67AB28BFF240001ADEE4 /* AVPlayerSwiftUI */,
+				5C0F67AD28BFFFF5001ADEE4 /* SUIPlayer */,
 			);
 			productName = DemoApp;
 			productReference = 5CFCCF9928BEE2B8001CD397 /* DemoApp.app */;
@@ -246,6 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C0F67B028C0015C001ADEE4 /* homeVideo.mp4 in Resources */,
 				5CFCCFA428BEE2B9001CD397 /* Preview Assets.xcassets in Resources */,
 				5CFCCFA128BEE2B9001CD397 /* Assets.xcassets in Resources */,
 			);
@@ -594,9 +598,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		5C0F67AB28BFF240001ADEE4 /* AVPlayerSwiftUI */ = {
+		5C0F67AD28BFFFF5001ADEE4 /* SUIPlayer */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AVPlayerSwiftUI;
+			productName = SUIPlayer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

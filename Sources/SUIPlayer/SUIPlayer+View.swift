@@ -11,7 +11,7 @@ import Lux
 import SwiftUI
 
 // This is the SwiftUI view which wraps the UIKit-based PlayerUIView above
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     struct AVPlayerView: UIViewRepresentable {
         let player: AVPlayer
         var controls: AVPlayerControls?
@@ -22,27 +22,27 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI.AVPlayerView {
-    func updateUIView(_: UIView, context _: UIViewRepresentableContext<AVPlayerSwiftUI.AVPlayerView>) {
+public extension SUIPlayer.AVPlayerView {
+    func updateUIView(_: UIView, context _: UIViewRepresentableContext<SUIPlayer.AVPlayerView>) {
         // This function gets called if the bindings change, which could be useful if
         // you need to respond to external changes, but we don’t in this example
     }
 
-    func makeUIView(context _: UIViewRepresentableContext<AVPlayerSwiftUI.AVPlayerView>) -> UIView {
-        let uiView = AVPlayerSwiftUI.AVPlayerUIView(player: player,
+    func makeUIView(context _: UIViewRepresentableContext<SUIPlayer.AVPlayerView>) -> UIView {
+        let uiView = SUIPlayer.AVPlayerUIView(player: player,
                                                     controls: controls)
         return uiView
     }
 
     static func dismantleUIView(_ uiView: UIView, coordinator _: ()) {
-        guard let playerUIView = uiView as? AVPlayerSwiftUI.AVPlayerUIView else {
+        guard let playerUIView = uiView as? SUIPlayer.AVPlayerUIView else {
             return
         }
         playerUIView.cleanUp()
     }
 }
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     // This is the SwiftUI view that contains the controls for the player
     struct AVPlayerControlsView: View {
         @Binding private(set) var videoPos: Double
@@ -59,7 +59,7 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI.AVPlayerControlsView {
+public extension SUIPlayer.AVPlayerControlsView {
     var body: some View {
         Row {
             // Play/pause button
@@ -69,7 +69,7 @@ public extension AVPlayerSwiftUI.AVPlayerControlsView {
                         .padding(.trailing, 10)
                 }
                 // Current video time
-                Text("\(AVPlayerSwiftUI.Utility.formatSecondsToHMS(videoPos * videoDuration))")
+                Text("\(SUIPlayer.Utility.formatSecondsToHMS(videoPos * videoDuration))")
             }
             .lux
             .style(.icon)
@@ -79,7 +79,7 @@ public extension AVPlayerSwiftUI.AVPlayerControlsView {
             Slider(value: $videoPos, in: 0 ... 1, onEditingChanged: sliderEditingChanged)
             // Video duration
             Group {
-                Text("\(AVPlayerSwiftUI.Utility.formatSecondsToHMS(videoDuration))")
+                Text("\(SUIPlayer.Utility.formatSecondsToHMS(videoDuration))")
             }
             .lux
             .tweak(.paddingQuarter)
@@ -125,7 +125,7 @@ public extension AVPlayerSwiftUI.AVPlayerControlsView {
     }
 }
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     // This is the SwiftUI view which contains the player and its controls
     struct AVPlayerContainerView: View {
         // The progress through the video, as a percentage (from 0 to 1)
@@ -145,9 +145,9 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI.AVPlayerContainerView {
-    var controls: AVPlayerSwiftUI.AVPlayerControls {
-        AVPlayerSwiftUI.AVPlayerControls(
+public extension SUIPlayer.AVPlayerContainerView {
+    var controls: SUIPlayer.AVPlayerControls {
+        SUIPlayer.AVPlayerControls(
             videoPos: $videoPos,
             videoDuration: $videoDuration,
             seeking: $seeking
@@ -156,8 +156,8 @@ public extension AVPlayerSwiftUI.AVPlayerContainerView {
 
     var body: some View {
         VStack {
-            AVPlayerSwiftUI.AVPlayerView(player: player, controls: controls)
-            AVPlayerSwiftUI.AVPlayerControlsView(videoPos: $videoPos,
+            SUIPlayer.AVPlayerView(player: player, controls: controls)
+            SUIPlayer.AVPlayerControlsView(videoPos: $videoPos,
                                                  videoDuration: $videoDuration,
                                                  seeking: $seeking,
                                                  player: player)
@@ -169,7 +169,7 @@ public extension AVPlayerSwiftUI.AVPlayerContainerView {
     }
 }
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     // This is the SwiftUI view which contains the player and its controls
     struct AVPlayerCoverView: View {
         @State private var videoPos: Double = 0
@@ -182,9 +182,9 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI.AVPlayerCoverView {
-    var controls: AVPlayerSwiftUI.AVPlayerControls {
-        var controls = AVPlayerSwiftUI.AVPlayerControls(
+public extension SUIPlayer.AVPlayerCoverView {
+    var controls: SUIPlayer.AVPlayerControls {
+        var controls = SUIPlayer.AVPlayerControls(
             videoPos: $videoPos,
             videoDuration: $videoDuration,
             seeking: $seeking
@@ -194,12 +194,12 @@ public extension AVPlayerSwiftUI.AVPlayerCoverView {
     }
 
     var body: some View {
-        AVPlayerSwiftUI.AVPlayerView(player: player, controls: controls)
+        SUIPlayer.AVPlayerView(player: player, controls: controls)
             .animation(.none)
     }
 }
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     class Utility: NSObject {
         private static var timeHMSFormatter: DateComponentsFormatter = {
             let formatter = DateComponentsFormatter()
@@ -216,7 +216,7 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI {
+public extension SUIPlayer {
     // This is the UIView that contains the AVPlayerLayer for rendering the video
     class AVPlayerUIView: UIView {
         private let player: AVPlayer
@@ -240,13 +240,13 @@ public extension AVPlayerSwiftUI {
             // Observe the duration of the player’s item so we can display it
             // and use it for updating the seek bar’s position
             durationObservation = player.currentItem?.observe(\.duration, changeHandler: { [weak self] item, _ in
-                guard let self = self else { return }
+                guard let self = self, self.player.currentItem != nil else { return }
                 self.controls.$videoDuration.wrappedValue = item.duration.seconds
             })
             // Observe the player’s time periodically so we can update the seek bar’s
             // position as we progress through playback
             timeObservation = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.123, preferredTimescale: 1000), queue: nil) { [weak self] time in
-                guard let self = self else { return }
+                guard let self = self, self.player.currentItem != nil else { return }
                 // If we’re not seeking currently (don’t want to override the slider
                 // position if the user is interacting)
 
@@ -272,7 +272,7 @@ public extension AVPlayerSwiftUI {
     }
 }
 
-public extension AVPlayerSwiftUI.AVPlayerUIView {
+public extension SUIPlayer.AVPlayerUIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         controls.playerLayer.frame = bounds
