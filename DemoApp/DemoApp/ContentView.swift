@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import
 
 struct ContentView: View {
+    var videoPlayer:AVPlayer{
+        AVPlayerSwiftUI.player(Seed.HomeVideoURL, id: "homeVideo", muted: true, autoplay: true)
+    }
+    
     var body: some View {
         Text("Hello, world!")
             .padding()

@@ -6,18 +6,10 @@
 //
 
 import SwiftUI
-import Framework
-
-class Model:ObservableObject{
-    init(){
-        let framework = Framework()
-        framework.test()
-    }
-}
+import AVPlayerSwiftUI
 
 @main
 struct DemoAppApp: App {
-    @ObservedObject var model = Model()
     var body: some Scene {
         WindowGroup {
             ContentView()
