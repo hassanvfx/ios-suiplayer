@@ -11,7 +11,8 @@ let package = Package(
     products: [
         .library(
             name: "SUIPlayer",
-            targets: ["SUIPlayer"]),
+            targets: ["SUIPlayer"]
+        ),
     ],
     dependencies: [
         .package(name: "Lux", url: "https://github.com/spree3d/lux-1", .exact("1.2.7")),
@@ -19,9 +20,11 @@ let package = Package(
     targets: [
         .target(
             name: "SUIPlayer",
-            dependencies: ["Lux"]),
+            dependencies: ["Lux"]
+        ),
         .testTarget(
             name: "FrameworkTests",
-            dependencies: ["SUIPlayer"]),
+            dependencies: ["SUIPlayer"]
+        ),
     ]
 )

@@ -30,7 +30,7 @@ public extension SUIPlayer.AVPlayerView {
 
     func makeUIView(context _: UIViewRepresentableContext<SUIPlayer.AVPlayerView>) -> UIView {
         let uiView = SUIPlayer.AVPlayerUIView(player: player,
-                                                    controls: controls)
+                                              controls: controls)
         return uiView
     }
 
@@ -129,7 +129,7 @@ public extension SUIPlayer {
     // This is the SwiftUI view which contains the player and its controls
     struct AVPlayerContainerView: View {
         // The progress through the video, as a percentage (from 0 to 1)
-        var playerId:String
+        var playerId: String
         var url: URL
         @State private var videoPos: Double = 0
         // The duration of the video in seconds
@@ -137,19 +137,18 @@ public extension SUIPlayer {
         // Whether we’re currently interacting with the seek bar or doing a seek
         @State private var seeking = false
         private let player: AVPlayer
-        init(playerId:StringId, url: URL) {
+        init(playerId: StringId, url: URL) {
             player = AVPlayer(url: url)
             self.url = url
             self.playerId = playerId
         }
-
     }
 }
 
 public extension SUIPlayer.AVPlayerContainerView {
     var controls: SUIPlayer.Controls {
         SUIPlayer.Controls(
-            id:playerId,
+            id: playerId,
             url: url,
             videoPos: $videoPos,
             videoDuration: $videoDuration,
@@ -161,9 +160,9 @@ public extension SUIPlayer.AVPlayerContainerView {
         VStack {
             SUIPlayer.AVPlayerView(player: player, controls: controls)
             SUIPlayer.ControlsView(videoPos: $videoPos,
-                                                 videoDuration: $videoDuration,
-                                                 seeking: $seeking,
-                                                 player: player)
+                                   videoDuration: $videoDuration,
+                                   seeking: $seeking,
+                                   player: player)
         }
         .onDisappear {
             // When this View isn’t being shown anymore stop the player
@@ -181,7 +180,7 @@ public extension SUIPlayer {
         @State private var videoDuration: Double = 0
         @State private var seeking = false
         private let player: AVPlayer
-        init(playerId:String, url: URL) {
+        init(playerId: String, url: URL) {
             player = AVPlayer(url: url)
             self.url = url
             self.playerId = playerId
@@ -192,7 +191,7 @@ public extension SUIPlayer {
 public extension SUIPlayer.AVPlayerCoverView {
     var controls: SUIPlayer.Controls {
         var controls = SUIPlayer.Controls(
-            id:playerId,
+            id: playerId,
             url: url,
             videoPos: $videoPos,
             videoDuration: $videoDuration,
@@ -275,7 +274,7 @@ public extension SUIPlayer {
 
         @available(*, unavailable)
         required init?(coder _: NSCoder) {
-            //LogService.assert(.miscellaneous, "init(coder:) has not been implemented")
+            // LogService.assert(.miscellaneous, "init(coder:) has not been implemented")
             return nil
         }
     }
@@ -289,7 +288,7 @@ public extension SUIPlayer.AVPlayerUIView {
 
     func cleanUp() {
         player.replaceCurrentItem(with: nil)
-        
+
         // Remove observers we setup in init
         durationObservation?.invalidate()
         durationObservation = nil
