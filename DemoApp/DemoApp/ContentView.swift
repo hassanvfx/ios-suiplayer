@@ -11,19 +11,12 @@ import AVFoundation
 
 struct ContentView: View {
     
-    /// TODO we require to notify inner player changes back to the view so it can reconstruct
-    /// the representable view and link the AVPlayerLayer with any new players associated to this playerId
-    /// while  `.id(videoPlayer.currentItem)`  ensures to recreate the `AVPlayerView` when needed
-    /// we still require an external mechanism that observes the inner changes in the AVPLayer (ie different current item after disposal)
-    /// a solution instead of the `status` state patched here, could be to use the Controls as a required parameter to interface the player and then, internally recreate the status prop whenever a  new player is constructed, so we can trigger the relinking wit the avplayerview
-    ///
-    ///  so overall
-    ///   - use the `control` struct as the only in-out inteface
-    ///   - encapsulate `url` into the `control` struct
-    ///   - make private the `avplayer` and instead expose control through the `control` struct
-    ///    - use the control struct to dispose the player and then internally trigger a new inner session
-    ///    - when a new player is created with also set a new inner session to triiger UI player layer linking
-   
+    /// The Controls struct works as a disposable  connector that allows to fetch the correspoding player
+    /// and interface with the inner control status
+    /// In itself the controls are not observable intentionally as we want to modularize the updates observation
+    /// instead, the controls can be binded to observable states as required
+    /// - if a player is meant to be diposed then we should use `.id(playbackId)` to ensure the view will be redrawn when a new player is created
+    /// 
     @State var isReady:Bool = false
     @State var isPlaying = false
     @State var isMuted = false
@@ -31,6 +24,18 @@ struct ContentView: View {
     @State var videoDuration = 0.0
     @State var seeking = false
     @State var playbackId = ""
+    var controls: SUIPlayer.Controls {
+        SUIPlayer.Controls(
+            id: playerId,
+            url: videoURL,
+            isReady: $isReady,
+            isPlaying: $isPlaying,
+            videoPos: $videoPos,
+            videoDuration: $videoDuration,
+            seeking: $seeking,
+            playbackId: $playbackId
+        )
+    }
     
     var body: some View {
         VStack{
@@ -58,7 +63,7 @@ struct ContentView: View {
                         .buttonStyle(BorderedButtonStyle())
                         
                         
-                        Button(action: {SUIPlayer.dispose(playerId: playerId)}){
+                        Button(action: controls.dispose){
                             Text("Dispose")
                         }
                         .buttonStyle(BorderedButtonStyle())
@@ -77,21 +82,6 @@ struct ContentView: View {
     }
 }
 
-extension ContentView{
-    var controls: SUIPlayer.Controls {
-        SUIPlayer.Controls(
-            id: playerId,
-            url: videoURL,
-            isReady: $isReady,
-            isPlaying: $isPlaying,
-            videoPos: $videoPos,
-            videoDuration: $videoDuration,
-            seeking: $seeking,
-            playbackId: $playbackId
-        )
-    }
-    
-}
 
 extension ContentView{
     
