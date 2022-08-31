@@ -49,21 +49,24 @@ struct ContentView: View {
                 }
                 .overlay(
                     VStack {
-                        Button(action: controls.pause) {
-                            Text("Pause")
-                        }
-                        .buttonStyle(BorderedButtonStyle())
+                        Group {
+                            Button(action: controls.pause) {
+                                Text("Pause")
+                            }
+                            .buttonStyle(BorderedButtonStyle())
 
-                        Button(action: controls.play) {
-                            Text("Play")
-                        }
-                        .buttonStyle(BorderedButtonStyle())
+                            Button(action: controls.play) {
+                                Text("Play")
+                            }
+                            .buttonStyle(BorderedButtonStyle())
 
-                        Button(action: controls.dispose) {
-                            Text("Dispose")
+                            Button(action: controls.dispose) {
+                                Text("Dispose")
+                            }
+                            .buttonStyle(BorderedButtonStyle())
                         }
-                        .buttonStyle(BorderedButtonStyle())
-
+                        .background(Color.black.opacity(1))
+                        .foregroundColor(.white)
                         Group {
                             Text("isPlaying \(isPlaying ? "1" : "0")")
                             Text("isReady \(isReady ? "1" : "0")")
@@ -73,8 +76,9 @@ struct ContentView: View {
                             Text("videoDuration \(videoDuration)")
                         }
                         .font(.caption)
+                        .foregroundColor(.white)
                     }
-                    .background(Color.black.opacity(1))
+                    .background(Color.black.opacity(0.5))
                 )
         }
     }
