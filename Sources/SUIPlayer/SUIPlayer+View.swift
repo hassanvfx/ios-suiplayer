@@ -12,15 +12,27 @@ import SwiftUI
 
 public struct SUIPlayerView: View {
     @ObservedObject var model: SUIPlayerModel
+   
     public init(model: SUIPlayerModel) {
         self.model = model
+    }
+    
+    func autoplay(){
+        model.controls.autoplay ? model.controls.play() : nil
     }
 
     public var body: some View {
         SUIPlayer.RepresentableView(controls: model.controls)
             .id(model.playbackId)
-            .onAppear(perform: model.controls.autoplay ? model.controls.play : {})
+            .onAppear(perform: autoplay)
             .onDisappear(perform: model.controls.dispose)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { (_) in
+                autoplay()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { (_) in
+                model.controls.dispose()
+            }
+           
     }
 }
 
