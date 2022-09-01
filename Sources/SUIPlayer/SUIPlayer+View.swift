@@ -10,6 +10,31 @@ import AVFoundation
 import Lux
 import SwiftUI
 
+public struct SUIPlayerView: View {
+    @ObservedObject var model: SUIPlayerModel
+    public init(model: SUIPlayerModel) {
+        self.model = model
+    }
+
+    public var body: some View {
+        SUIPlayer.RepresentableView(controls: model.controls)
+            .id(model.playbackId)
+            .onDisappear {
+                model.controls.dispose()
+            }
+    }
+}
+
+public extension SUIPlayer {
+    @ViewBuilder
+    static func RepresentableView(controls: SUIPlayer.Controls) -> some View {
+        let player = SUIPlayer.player(controls.url, id: controls.playerId, muted: controls.muted, autoplay: controls.autoplay, looping: controls.loop)
+
+        SUIPlayer.AVPlayerView(player: player.player, controls: controls)
+            .id(player.player.currentItem)
+    }
+}
+
 // This is the SwiftUI view which wraps the UIKit-based PlayerUIView above
 public extension SUIPlayer {
     struct AVPlayerView: UIViewRepresentable {

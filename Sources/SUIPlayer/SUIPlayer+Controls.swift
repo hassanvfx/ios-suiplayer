@@ -58,9 +58,52 @@ public extension SUIPlayer {
         }
 
         public func newSession() {
-//            DispatchQueue.main.async {
             playbackId = UUID().uuidString
-//            }
         }
+    }
+}
+
+public extension SUIPlayer.Controls {
+    func play() {
+        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+
+        if fetch.fetched == .newPlayer {
+            newSession()
+        }
+
+        guard fetch.player.isAtEnd == false else {
+            fetch.player.seek(to: .zero) { _ in
+                fetch.player.play()
+            }
+            return
+        }
+        fetch.player.play()
+    }
+
+    func pause() {
+        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+        if fetch.fetched == .newPlayer {
+            newSession()
+        }
+        fetch.player.pause()
+    }
+
+    func dispose() {
+        SUIPlayer.dispose(playerId: playerId)
+    }
+}
+
+extension AVPlayer {
+    var isAtEnd: Bool {
+        guard let currentItem = currentItem else {
+            return false
+        }
+
+        var time = currentTime().seconds
+        time = time.isNormal ? time : 0
+        var duration = currentItem.duration.seconds
+        duration = duration.isNormal ? duration : 0
+
+        return Int(time) >= Int(duration)
     }
 }
