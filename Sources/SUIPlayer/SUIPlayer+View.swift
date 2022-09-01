@@ -19,9 +19,8 @@ public struct SUIPlayerView: View {
     public var body: some View {
         SUIPlayer.RepresentableView(controls: model.controls)
             .id(model.playbackId)
-            .onDisappear {
-                model.controls.dispose()
-            }
+            .onAppear(perform: model.controls.autoplay ? model.controls.play : {})
+            .onDisappear(perform: model.controls.dispose)
     }
 }
 

@@ -69,7 +69,7 @@ public struct SUIPlayerDebugView: ViewModifier {
                             .bold()
                             .padding()
                     }
-                    .foregroundColor(.white)
+                    .foregroundColor(hidden ? .gray : .white)
                 }
                 .background(
                     model.isReady

@@ -64,6 +64,31 @@ public extension SUIPlayer {
 }
 
 public extension SUIPlayer.Controls {
+    func playPause() {
+        let (player, fetched) = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+
+        if fetched == .newPlayer {
+            newSession()
+        }
+
+        guard player.currentItem != nil else { return }
+        player.rate > 0 ? player.pause() : player.play()
+    }
+
+    func rewind() {
+        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+
+        if fetch.fetched == .newPlayer {
+            newSession()
+        }
+
+        fetch.player.seek(to: .zero) { _ in
+            fetch.player.play()
+        }
+    }
+}
+
+public extension SUIPlayer.Controls {
     func play() {
         let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
 
