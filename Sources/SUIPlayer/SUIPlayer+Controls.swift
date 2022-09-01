@@ -64,22 +64,21 @@ public extension SUIPlayer {
 }
 
 public extension SUIPlayer.Controls {
-    
-    func fetchPlayer()->AVPlayer{
+    func fetchPlayer() -> AVPlayer {
         let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
 
         if fetch.fetched == .newPlayer {
             newSession()
         }
-        
+
         return fetch.player
     }
-    
-    func set(volume:Float){
+
+    func set(volume: Float) {
         let player = fetchPlayer()
         player.volume = volume
     }
-    
+
     func playPause() {
         let player = fetchPlayer()
 
@@ -89,7 +88,7 @@ public extension SUIPlayer.Controls {
 
     func rewind() {
         let player = fetchPlayer()
-        
+
         player.seek(to: .zero) { _ in
             player.play()
         }
