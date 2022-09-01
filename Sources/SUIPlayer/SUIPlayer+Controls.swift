@@ -64,53 +64,54 @@ public extension SUIPlayer {
 }
 
 public extension SUIPlayer.Controls {
-    func playPause() {
-        let (player, fetched) = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+    
+    func fetchPlayer()->AVPlayer{
+        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
 
-        if fetched == .newPlayer {
+        if fetch.fetched == .newPlayer {
             newSession()
         }
+        
+        return fetch.player
+    }
+    
+    func set(volume:Float){
+        let player = fetchPlayer()
+        player.volume = volume
+    }
+    
+    func playPause() {
+        let player = fetchPlayer()
 
         guard player.currentItem != nil else { return }
         player.rate > 0 ? player.pause() : player.play()
     }
 
     func rewind() {
-        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
-
-        if fetch.fetched == .newPlayer {
-            newSession()
-        }
-
-        fetch.player.seek(to: .zero) { _ in
-            fetch.player.play()
+        let player = fetchPlayer()
+        
+        player.seek(to: .zero) { _ in
+            player.play()
         }
     }
 }
 
 public extension SUIPlayer.Controls {
     func play() {
-        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
+        let player = fetchPlayer()
 
-        if fetch.fetched == .newPlayer {
-            newSession()
-        }
-
-        guard fetch.player.isAtEnd == false else {
-            fetch.player.seek(to: .zero) { _ in
-                fetch.player.play()
+        guard player.isAtEnd == false else {
+            player.seek(to: .zero) { _ in
+                player.play()
             }
             return
         }
-        fetch.player.play()
+        player.play()
     }
 
     func pause() {
-        let fetch = SUIPlayer.player(url, id: playerId, muted: muted, autoplay: autoplay)
-        if fetch.fetched == .newPlayer {
-            newSession()
-        }
-        fetch.player.pause()
+        let player = fetchPlayer()
+        player.pause()
     }
 
     func dispose() {
