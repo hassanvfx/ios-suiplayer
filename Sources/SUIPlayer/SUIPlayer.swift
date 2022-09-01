@@ -20,8 +20,17 @@ extension SUIPlayer {
     private static var players: [StringId: AVPlayer] = [:]
 
     /// we require an id as a video with the same url may be played in multiple parts of the view composition
-    static func player(_ url: URL, id: String, muted: Bool = false, autoplay: Bool = false) -> (player: AVPlayer, fetched: PlayerFetching) {
+    static func player(_ url: URL, id: String, muted: Bool = false, autoplay: Bool = false, looping: Bool = false) -> (player: AVPlayer, fetched: PlayerFetching) {
         var players = self.players
+
+        let preparePlayer: (AVPlayer, Bool?) -> Void = { player, autoplayValue in
+            // LogService.debug(.player, "player \(id) being prepared to loop")
+            looping ? loop(player: player) : nil
+            player.volume = muted ? 0 : 1
+            if let autoplayValue = autoplayValue {
+                autoplayValue ? player.play() : player.pause()
+            }
+        }
 
         if let player = players[id],
            player.currentItem != nil,
@@ -29,26 +38,18 @@ extension SUIPlayer {
            let asset = player.currentItem?.asset as? AVURLAsset,
            asset.url == url
         {
-            // LogService.debug(.player, "player \(id) returned cached")
+            preparePlayer(player, nil)
             return (player: player, fetched: .cachedPlayer)
         }
 
-        // LogService.debug(.player, "player \(id) being created")
         dispose(playerId: id)
-
-        let preparePlayer: (AVPlayer) -> Void = { player in
-            // LogService.debug(.player, "player \(id) being prepared to loop")
-            loop(player: player)
-            player.volume = muted ? 0 : 1
-            autoplay ? player.playImmediately(atRate: 1) : nil
-        }
 
         let playerItem = AVPlayerItem(url: url)
         let player = AVPlayer(playerItem: playerItem)
 
         players[id] = player
         self.players = players
-        preparePlayer(player)
+        preparePlayer(player, autoplay)
 
         return (player: player, fetched: .newPlayer)
     }

@@ -58,9 +58,9 @@ public extension SUIPlayer {
         }
 
         public func newSession() {
-            DispatchQueue.main.async {
-                self.playbackId = UUID().uuidString
-            }
+//            DispatchQueue.main.async {
+            playbackId = UUID().uuidString
+//            }
         }
     }
 }
