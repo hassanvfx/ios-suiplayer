@@ -34,7 +34,7 @@ struct ContentView: View {
         muted: false,
         autoplay: true,
         loop: false,
-        publishVideoPos: false
+        publishVideoPos: true
     )
 
     @StateObject var playerPub4 = SUIPlayerModel(
@@ -43,7 +43,7 @@ struct ContentView: View {
         muted: true,
         autoplay: false,
         loop: false,
-        publishVideoPos: false
+        publishVideoPos: true
     )
 
     var body: some View {

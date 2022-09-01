@@ -15,13 +15,13 @@ public extension View {
 }
 
 public struct SUIPlayerDebugView: ViewModifier {
-    @ViewBuilder
-    var model: SUIPlayerModel
+    @ObservedObject var model: SUIPlayerModel
     @State var hidden = false
     public init(model: SUIPlayerModel) {
         self.model = model
     }
 
+    @ViewBuilder
     public func body(content: Self.Content) -> some View {
         content
             .overlay(

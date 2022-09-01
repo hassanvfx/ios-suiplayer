@@ -24,6 +24,38 @@ public class SUIPlayerModel: ObservableObject {
     @Published public var playbackId = ""
     @Published public var controls: SUIPlayer.Controls
 
+    public init(id: String,
+                url: URL,
+                muted: Bool = false,
+                autoplay: Bool = true,
+                loop: Bool = true,
+                publishPlaybackId: Bool = true,
+                publishIsReady: Bool = true,
+                publishIsPlaying: Bool = true,
+                publishVideoPos: Bool = false,
+                publishVideoDuration: Bool = true,
+                publishSeeking: Bool = false)
+    {
+        controls = SUIPlayer.Controls(
+            id: id,
+            url: url
+        )
+
+        controls = SUIPlayer.Controls(
+            id: id,
+            url: url,
+            muted: muted,
+            autoplay: autoplay,
+            loop: loop,
+            playbackId: publishPlaybackId ? playbackIdBinding : .constant(""),
+            isReady: publishIsReady ? isReadyBinding : .constant(false),
+            isPlaying: publishIsPlaying ? isPlayingBinding : .constant(false),
+            videoPos: publishVideoPos ? videoPosBinding : .constant(0),
+            videoDuration: publishVideoDuration ? videoDurationBinding : .constant(0),
+            seeking: publishSeeking ? seekingBinding : .constant(false)
+        )
+    }
+
     lazy var playbackIdBinding = Binding(
         get: { [weak self] in
             self?.playbackId ?? ""
@@ -83,36 +115,4 @@ public class SUIPlayerModel: ObservableObject {
             self?.seeking = $0
         }
     )
-
-    public init(id: String,
-                url: URL,
-                muted: Bool = false,
-                autoplay: Bool = true,
-                loop: Bool = true,
-                publishPlaybackId: Bool = true,
-                publishIsReady: Bool = true,
-                publishIsPlaying: Bool = true,
-                publishVideoPos: Bool = false,
-                publishVideoDuration: Bool = true,
-                publishSeeking: Bool = false)
-    {
-        controls = SUIPlayer.Controls(
-            id: id,
-            url: url
-        )
-
-        controls = SUIPlayer.Controls(
-            id: id,
-            url: url,
-            muted: muted,
-            autoplay: autoplay,
-            loop: loop,
-            playbackId: publishPlaybackId ? playbackIdBinding : .constant(""),
-            isReady: publishIsReady ? isReadyBinding : .constant(false),
-            isPlaying: publishIsPlaying ? isPlayingBinding : .constant(false),
-            videoPos: publishVideoPos ? videoPosBinding : .constant(0),
-            videoDuration: publishVideoDuration ? videoDurationBinding : .constant(0),
-            seeking: publishSeeking ? seekingBinding : .constant(false)
-        )
-    }
 }
