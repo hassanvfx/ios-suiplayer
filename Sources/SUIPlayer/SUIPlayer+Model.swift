@@ -29,6 +29,7 @@ public class PlayerModel: ObservableObject {
             self?.playbackId ?? ""
         },
         set: { [weak self] in
+            guard $0 != self?.playbackId else { return }
             self?.playbackId = $0
         }
     )
@@ -38,6 +39,7 @@ public class PlayerModel: ObservableObject {
             self?.isReady ?? false
         },
         set: { [weak self] in
+            guard $0 != self?.isReady else { return }
             self?.isReady = $0
         }
     )
@@ -47,6 +49,7 @@ public class PlayerModel: ObservableObject {
             self?.isPlaying ?? false
         },
         set: { [weak self] in
+            guard $0 != self?.isPlaying else { return }
             self?.isPlaying = $0
         }
     )
@@ -56,6 +59,7 @@ public class PlayerModel: ObservableObject {
             self?.videoPos ?? -1
         },
         set: { [weak self] in
+            guard $0 != self?.videoPos else { return }
             self?.videoPos = $0
         }
     )
@@ -65,6 +69,7 @@ public class PlayerModel: ObservableObject {
             self?.videoDuration ?? -1
         },
         set: { [weak self] in
+            guard $0 != self?.videoDuration else { return }
             self?.videoDuration = $0
         }
     )
@@ -74,6 +79,7 @@ public class PlayerModel: ObservableObject {
             self?.seeking ?? false
         },
         set: { [weak self] in
+            guard $0 != self?.seeking else { return }
             self?.seeking = $0
         }
     )
@@ -82,7 +88,13 @@ public class PlayerModel: ObservableObject {
                 url: URL,
                 muted: Bool = false,
                 autoplay: Bool = true,
-                loop: Bool = true)
+                loop: Bool = true,
+                publishPlaybackId: Bool = true,
+                publishIsReady: Bool = true,
+                publishIsPlaying: Bool = true,
+                publishVideoPos: Bool = false,
+                publishVideoDuration: Bool = true,
+                publishSeeking: Bool = false)
     {
         controls = SUIPlayer.Controls(
             id: id,
@@ -95,12 +107,12 @@ public class PlayerModel: ObservableObject {
             muted: muted,
             autoplay: autoplay,
             loop: loop,
-            playbackId: playbackIdBinding,
-            isReady: isReadyBinding,
-            isPlaying: isPlayingBinding,
-            videoPos: videoPosBinding,
-            videoDuration: videoDurationBinding,
-            seeking: seekingBinding
+            playbackId: publishPlaybackId ? playbackIdBinding : .constant(""),
+            isReady: publishIsReady ? isReadyBinding : .constant(false),
+            isPlaying: publishIsPlaying ? isPlayingBinding : .constant(false),
+            videoPos: publishVideoPos ? videoPosBinding : .constant(0),
+            videoDuration: publishVideoDuration ? videoDurationBinding : .constant(0),
+            seeking: publishSeeking ? seekingBinding : .constant(false)
         )
     }
 }

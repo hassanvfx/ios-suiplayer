@@ -10,13 +10,41 @@ import SUIPlayer
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var playerPub1 = PlayerModel(id: "Player 1", url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!, muted: false, autoplay: true, loop: true)
+    @StateObject var playerPub1 = PlayerModel(
+        id: "Player 1",
+        url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
+        muted: false,
+        autoplay: true,
+        loop: true,
+        publishVideoPos: true
+    )
 
-    @StateObject var playerPub2 = PlayerModel(id: "Player 2", url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!, muted: true, autoplay: false, loop: true)
+    @StateObject var playerPub2 = PlayerModel(
+        id: "Player 2",
+        url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
+        muted: true,
+        autoplay: false,
+        loop: true,
+        publishVideoPos: true
+    )
 
-    @StateObject var playerPub3 = PlayerModel(id: "Player 3", url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!, muted: false, autoplay: true, loop: false)
+    @StateObject var playerPub3 = PlayerModel(
+        id: "Player 3",
+        url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
+        muted: false,
+        autoplay: true,
+        loop: false,
+        publishVideoPos: false
+    )
 
-    @StateObject var playerPub4 = PlayerModel(id: "Player 4", url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!, muted: true, autoplay: false, loop: false)
+    @StateObject var playerPub4 = PlayerModel(
+        id: "Player 4",
+        url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
+        muted: true,
+        autoplay: false,
+        loop: false,
+        publishVideoPos: false
+    )
 
     var body: some View {
         VStack {
