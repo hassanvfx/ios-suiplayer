@@ -10,7 +10,7 @@ import SUIPlayer
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var playerPub1 = SUIPlayerModel(
+    @StateObject var player1 = SUIPlayerModel(
         id: "Player 1",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: false,
@@ -19,16 +19,16 @@ struct ContentView: View {
         publishVideoPos: true
     )
 
-    @StateObject var playerPub2 = SUIPlayerModel(
+    @StateObject var player2 = SUIPlayerModel(
         id: "Player 2",
-        url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
+        url: URL(string: "https://download.samplelib.com/mp4/sample-5s.mp4")!,
         muted: true,
-        autoplay: false,
+        autoplay: true,
         loop: true,
         publishVideoPos: true
     )
 
-    @StateObject var playerPub3 = SUIPlayerModel(
+    @StateObject var player3 = SUIPlayerModel(
         id: "Player 3",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: false,
@@ -37,7 +37,7 @@ struct ContentView: View {
         publishVideoPos: true
     )
 
-    @StateObject var playerPub4 = SUIPlayerModel(
+    @StateObject var player4 = SUIPlayerModel(
         id: "Player 4",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: true,
@@ -51,30 +51,27 @@ struct ContentView: View {
             VStack {
                 GeometryReader { geo in
                     ZStack {
-                        SUIPlayerView(model: playerPub1)
-                            .suiPlayerDebugOverlay(model: playerPub1)
+                        SUIPlayerView(model: player1)
+                            .suiPlayerDebugOverlay(model: player1)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
 
-                        SUIPlayerView(model: playerPub2)
-                            .suiPlayerDebugOverlay(model: playerPub2)
+                        SUIPlayerView(model: player2)
+                            .suiPlayerDebugOverlay(model: player2)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .topTrailing)
 
-                        SUIPlayerView(model: playerPub3)
-                            .suiPlayerDebugOverlay(model: playerPub3)
+                        SUIPlayerView(model: player3)
+                            .suiPlayerDebugOverlay(model: player3)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomLeading)
 
-                        SUIPlayerView(model: playerPub4)
-                            .suiPlayerDebugOverlay(model: playerPub4)
+                        SUIPlayerView(model: player4)
+                            .suiPlayerDebugOverlay(model: player4)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomTrailing)
                     }
                 }
-                Text("NOTE:Pause all players to keep them disposed. This is because the player observers trigger a view redraw and then the other players may trigger a reconstruction")
-                    .font(.caption)
-                    .padding()
 
                 HStack {
                     Button(action: pauseAll) {
@@ -95,18 +92,18 @@ struct ContentView: View {
 
 extension ContentView {
     func pauseAll() {
-        playerPub1.controls.pause()
-        playerPub2.controls.pause()
-        playerPub3.controls.pause()
-        playerPub4.controls.pause()
+        player1.controls.pause()
+        player2.controls.pause()
+        player3.controls.pause()
+        player4.controls.pause()
     }
 
     func disposeAll() {
         pauseAll()
-        playerPub1.controls.dispose()
-        playerPub2.controls.dispose()
-        playerPub3.controls.dispose()
-        playerPub4.controls.dispose()
+        player1.controls.dispose()
+        player2.controls.dispose()
+        player3.controls.dispose()
+        player4.controls.dispose()
     }
 }
 

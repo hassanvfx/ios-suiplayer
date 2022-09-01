@@ -50,7 +50,7 @@ public struct SUIPlayerDebugView: ViewModifier {
                     .opacity(hidden ? 0 : 1)
                     Group {
                         Text("\(model.controls.playerId)").bold()
-                        Text("\(String(model.controls.playbackId.prefix(4)))").bold()
+                        Text("\(String(model.playbackId.prefix(4)))").bold()
                         Text("muted \(model.controls.muted ? "1" : "0")").bold()
                         Text("autoplay \(model.controls.autoplay ? "1" : "0")").bold()
                         Text("loop \(model.controls.loop ? "1" : "0")").bold()
@@ -71,7 +71,10 @@ public struct SUIPlayerDebugView: ViewModifier {
                     }
                     .foregroundColor(.white)
                 }
-                .background(Color.black.opacity(hidden ? 0.0 : 0.5))
+                .background(
+                    model.isReady
+                        ? Color.black.opacity(hidden ? 0.0 : 0.5)
+                        : Color.red.opacity(hidden ? 0.0 : 0.5))
             )
     }
 }
