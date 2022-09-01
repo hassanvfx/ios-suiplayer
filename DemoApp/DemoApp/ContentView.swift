@@ -10,7 +10,7 @@ import SUIPlayer
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var playerPub1 = PlayerModel(
+    @StateObject var playerPub1 = SUIPlayerModel(
         id: "Player 1",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: false,
@@ -19,7 +19,7 @@ struct ContentView: View {
         publishVideoPos: true
     )
 
-    @StateObject var playerPub2 = PlayerModel(
+    @StateObject var playerPub2 = SUIPlayerModel(
         id: "Player 2",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: true,
@@ -28,7 +28,7 @@ struct ContentView: View {
         publishVideoPos: true
     )
 
-    @StateObject var playerPub3 = PlayerModel(
+    @StateObject var playerPub3 = SUIPlayerModel(
         id: "Player 3",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: false,
@@ -37,7 +37,7 @@ struct ContentView: View {
         publishVideoPos: false
     )
 
-    @StateObject var playerPub4 = PlayerModel(
+    @StateObject var playerPub4 = SUIPlayerModel(
         id: "Player 4",
         url: Bundle.main.url(forResource: "homeVideo", withExtension: "mp4")!,
         muted: true,
@@ -51,19 +51,23 @@ struct ContentView: View {
             VStack {
                 GeometryReader { geo in
                     ZStack {
-                        playerDisplay(model: playerPub1)
+                        SUIPlayerView(model: playerPub1)
+                            .suiPlayerDebugOverlay(model: playerPub1)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
 
-                        playerDisplay(model: playerPub2)
+                        SUIPlayerView(model: playerPub2)
+                            .suiPlayerDebugOverlay(model: playerPub2)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .topTrailing)
 
-                        playerDisplay(model: playerPub3)
+                        SUIPlayerView(model: playerPub3)
+                            .suiPlayerDebugOverlay(model: playerPub3)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomLeading)
 
-                        playerDisplay(model: playerPub4)
+                        SUIPlayerView(model: playerPub4)
+                            .suiPlayerDebugOverlay(model: playerPub4)
                             .frame(width: geo.size.width * 0.5, height: geo.size.height * 0.5, alignment: .center)
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomTrailing)
                     }
@@ -108,12 +112,11 @@ extension ContentView {
 
 extension ContentView {
     @ViewBuilder
-    func playerDisplay(model: PlayerModel) -> some View {
+    func playerDisplay(model: SUIPlayerModel) -> some View {
         //        if let controls = model.controls {
         let controls = model.controls
         VStack {
-            SUIPlayer.View(controls: controls)
-                .id(model.playbackId)
+            SUIPlayerView(model: model)
                 .onDisappear {
                     controls.dispose()
                 }

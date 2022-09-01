@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public class PlayerModel: ObservableObject {
+public class SUIPlayerModel: ObservableObject {
     /// The Controls struct works as a disposable  connector that allows to fetch the correspoding player
     /// and interface with the inner control status
     /// In itself the controls are not observable intentionally as we want to modularize the updates observation
