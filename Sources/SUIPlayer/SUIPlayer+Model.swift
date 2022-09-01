@@ -32,9 +32,16 @@ public class SUIPlayerModel: ObservableObject {
                 publishPlaybackId: Bool = true,
                 publishIsReady: Bool = true,
                 publishIsPlaying: Bool = true,
+                publishIsMuted: Bool = true,
                 publishVideoPos: Bool = false,
                 publishVideoDuration: Bool = true,
-                publishSeeking: Bool = false)
+                publishSeeking: Bool = false,
+                isReady: Binding<Bool>? = nil,
+                isPlaying: Binding<Bool>? = nil,
+                isMuted: Binding<Bool>? = nil,
+                videoPos: Binding<Double>? = nil,
+                videoDuration: Binding<Double>? = nil,
+                seeking: Binding<Bool>? = nil)
     {
         controls = SUIPlayer.Controls(
             id: id,
@@ -48,10 +55,11 @@ public class SUIPlayerModel: ObservableObject {
             autoplay: autoplay,
             loop: loop,
             playbackId: publishPlaybackId ? playbackIdBinding : .constant(""),
-            isReady: publishIsReady ? isReadyBinding : .constant(false),
-            isPlaying: publishIsPlaying ? isPlayingBinding : .constant(false),
-            videoPos: publishVideoPos ? videoPosBinding : .constant(0),
-            videoDuration: publishVideoDuration ? videoDurationBinding : .constant(0),
+            isReady: publishIsReady ? isReady ?? isReadyBinding : .constant(false),
+            isPlaying: publishIsPlaying ? isPlaying ?? isPlayingBinding : .constant(false),
+            isMuted: publishIsMuted ? isMuted ?? isMutedBinding : .constant(false),
+            videoPos: publishVideoPos ? videoPos ?? videoPosBinding : .constant(0),
+            videoDuration: publishVideoDuration ? videoDuration ?? videoDurationBinding : .constant(0),
             seeking: publishSeeking ? seekingBinding : .constant(false)
         )
     }
@@ -113,6 +121,16 @@ public class SUIPlayerModel: ObservableObject {
         set: { [weak self] in
             guard $0 != self?.seeking else { return }
             self?.seeking = $0
+        }
+    )
+    
+    lazy var isMutedBinding = Binding(
+        get: { [weak self] in
+            self?.isMuted ?? false
+        },
+        set: { [weak self] in
+            guard $0 != self?.isMuted else { return }
+            self?.isMuted = $0
         }
     )
 }
