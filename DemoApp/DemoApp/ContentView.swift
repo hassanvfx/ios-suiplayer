@@ -40,7 +40,7 @@ struct ContentView: View {
                             .frame(width: geo.size.width, height: geo.size.height, alignment: .bottomTrailing)
                     }
                 }
-                Text("NOTE:Pause all players to keep them disposed")
+                Text("NOTE:Pause all players to keep them disposed. This is because the player observers trigger a view redraw and then the other players may trigger a reconstruction")
                     .font(.caption)
                     .padding()
 
@@ -113,11 +113,11 @@ extension ContentView {
                             .foregroundColor(.white)
                         }
                         Group {
-                            Text("\(model.controls.playerId)")
-                            Text("\(String(model.controls.playbackId.prefix(4)))")
-                            Text("muted \(model.controls.muted ? "1" : "0")")
-                            Text("autoplay \(model.controls.autoplay ? "1" : "0")")
-                            Text("loop \(model.controls.loop ? "1" : "0")")
+                            Text("\(model.controls.playerId)").bold()
+                            Text("\(String(model.controls.playbackId.prefix(4)))").bold()
+                            Text("muted \(model.controls.muted ? "1" : "0")").bold()
+                            Text("autoplay \(model.controls.autoplay ? "1" : "0")").bold()
+                            Text("loop \(model.controls.loop ? "1" : "0")").bold()
                             Text("isReady \(model.isReady ? "1" : "0")")
                             Text("isMuted \(model.isMuted ? "1" : "0")")
                             Text("seeking \(model.seeking ? "1" : "0")")
